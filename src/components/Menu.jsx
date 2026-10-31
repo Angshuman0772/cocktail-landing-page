@@ -1,10 +1,64 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { sliderLists } from "../constants";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap/all";
 
 const Menu = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useGSAP(() => {
+    gsap.fromTo(
+      "#title",
+      {
+        opacity: 0,
+      },
+      { opacity: 1, duration: 1 },
+    );
+
+    gsap.fromTo(
+      ".cocktail img",
+      {
+        opacity: 0,
+        xPercent: -100,
+      },
+      {
+        xPercent: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power1.inOut",
+      },
+    );
+
+    gsap.fromTo(
+      ".details h2",
+      {
+        yPercent: 100,
+        opacity: 0,
+      },
+      {
+        yPercent: 0,
+        opacity: 100,
+        ease: "power1.inOut",
+      },
+    );
+
+    gsap.fromTo(
+      ".details p",
+      {
+        yPercent: 100,
+        opacity: 0,
+      },
+      {
+        yPercent: 0,
+        opacity: 100,
+        ease: "power1.inOut",
+      },
+    );
+  }, [currentIndex]);
+
+  const contentRef = useRef();
 
   const totalCocktails = sliderLists.length;
 
@@ -62,7 +116,7 @@ const Menu = () => {
         })}
       </nav>
       <div className="content">
-        <div className="arrow">
+        <div className="arrows">
           <button
             className="text-left"
             onClick={() => goToSlide(currentIndex - 1)}
@@ -89,7 +143,18 @@ const Menu = () => {
         </div>
 
         <div className="cocktail">
-          <img src={currentCocktail.image} className="object-container" />
+          <img src={currentCocktail.image} className="object-contain" />
+        </div>
+
+        <div className="recipe">
+          <div ref={contentRef} className="info">
+            <p>Recipe for:</p>
+            <p id="title">{currentCocktail.name}</p>
+          </div>
+          <div className="details">
+            <h2>{currentCocktail.title}</h2>
+            <p>{currentCocktail.description}</p>
+          </div>
         </div>
       </div>
     </section>
